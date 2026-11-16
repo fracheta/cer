@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanças+ | Controle Financeiro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="topbar">
+        <div class="logo">
+            <span class="logo-icon">💎</span>
+            <span class="logo-text">Finanças<span class="accent">+</span></span>
+        </div>
+        <div class="topbar-right"><span id="dataHoje"></span></div>
+    </header>
+
+    <main class="container">
+        <section class="summary">
+            <div class="card summary-card saldo">
+                <div class="card-icon">💰</div>
+                <div class="card-content">
+                    <span class="card-label">Saldo total</span>
+                    <span class="card-value" id="saldo">R$ 0,00</span>
+                </div>
+            </div>
+            <div class="card summary-card receita">
+                <div class="card-icon">📈</div>
+                <div class="card-content">
+                    <span class="card-label">Receitas</span>
+                    <span class="card-value" id="receitas">R$ 0,00</span>
+                </div>
+            </div>
+            <div class="card summary-card despesa">
+                <div class="card-icon">📉</div>
+                <div class="card-content">
+                    <span class="card-label">Despesas</span>
+                    <span class="card-value" id="despesas">R$ 0,00</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="charts-section">
+            <div class="card chart-card">
+                <h2 class="section-title">Gastos por categoria</h2>
+                <div class="chart-wrapper"><canvas id="chartCategorias"></canvas></div>
+            </div>
+            <div class="card breakdown-card">
+                <h2 class="section-title">Distribuição</h2>
+                <ul class="breakdown-list" id="breakdownList">
+                    <li class="empty-state">Nenhuma despesa registrada ainda.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="main-grid">
+            <div class="card form-card">
+                <h2 class="section-title">Novo lançamento</h2>
+                <form id="formTransacao" class="form">
+                    <div class="form-group">
+                        <label for="descricao">Descrição</label>
+                        <input type="text" id="descricao" placeholder="Ex: Almoço no restaurante" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="valor">Valor (R$)</label>
+                            <input type="number" id="valor" step="0.01" min="0.01" placeholder="0,00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="data">Data</label>
+                            <input type="date" id="data" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tipo">Tipo</label>
+                            <select id="tipo" required>
+                                <option value="despesa">Despesa</option>
+                                <option value="receita">Receita</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoria">Categoria</label>
+                            <select id="categoria" required></select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">+ Adicionar lançamento</button>
+                </form>
+            </div>
+
+            <div class="card transactions-card">
+                <div class="card-header">
+                    <h2 class="section-title">Últimos lançamentos</h2>
+                </div>
+                <ul class="transactions-list" id="transacoesList">
+                    <li class="empty-state">Nenhum lançamento ainda.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card categories-card">
+            <div class="card-header">
+                <h2 class="section-title">Categorias</h2>
+                <button class="btn-secondary" id="btnNovaCategoria">+ Nova categoria</button>
+            </div>
+            <div class="categories-grid" id="categoriasGrid"></div>
+        </section>
+    </main>
+
+    <div class="modal" id="modalCategoria">
+        <div class="modal-content">
+            <h3>Nova categoria</h3>
+            <form id="formCategoria" class="form">
+                <div class="form-group">
+                    <label for="catNome">Nome</label>
+                    <input type="text" id="catNome" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="catTipo">Tipo</label>
+                        <select id="catTipo">
+                            <option value="despesa">Despesa</option>
+                            <option value="receita">Receita</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="catCor">Cor</label>
+                        <input type="color" id="catCor" value="#6366f1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="catIcone">Ícone (emoji)</label>
+                    <input type="text" id="catIcone" value="💰" maxlength="2">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="btnCancelarCat">Cancelar</button>
+                    <button type="submit" class="btn-primary">Criar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
